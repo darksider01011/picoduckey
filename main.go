@@ -36,34 +36,30 @@ func main() {
       } else {
       fmt.Println("file:", *tenfile)
       }
-      
-      //Line Counter
-      filename := *tenfile
-      file, _ := os.Open(filename)
-      scanner := bufio.NewScanner(file)
-      linecount := 0
-      for scanner.Scan(){
-         linecount++}
-      
-      //Create File
-      filee, _ := os.Create("zzz.txt")
-      writer := bufio.NewWriter(filee)
 
+      file, _ := os.Open(*tenfile)
+      defer file.Close()
+
+      scanner := bufio.NewScanner(file)
+
+      var list []string
+
+      for scanner.Scan() {
+         list = append(list, scanner.Text())
+      }
+
+      filee, _ := os.Create("output.txt")
       
-      
-      for _, line := range lines {
-         lines := []string{
-            "DELAY 1000",
+      first := fmt.Sprintf("DELAY 2000\n ESC")
+      filee.WriteString(first + "\n")
+
+      for i, line := range list {
+         if i<6 {
+            content := fmt.Sprintf("DELAY 500\n STRING %s\n ENTER\n DELAY 500\n ENTER\n DELAY 300", line)
+            filee.WriteString(content + "\n")
          }
-         writer.WriteString(line)
       }
       
-      writer.Flush()
-   
-      defer file.Close()
-      defer filee.Close()
-
-
    default:
       fmt.Println("Expected 'w7' and 'w10' subcommand")
       os.Exit(1)
