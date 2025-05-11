@@ -29,12 +29,16 @@ func main() {
          fmt.Println("file:", *sevenfile)
       }
    
-   case "w10":
+   case "w11":
       ten.Parse(os.Args[2:])
       if *tenfile == "" {
          fmt.Println("Error: Wordlist is not set")
       } else {
-      fmt.Println("file:", *tenfile)
+      fmt.Println("")
+      fmt.Println("File:", *tenfile)
+      fmt.Println("Output file: PAYLOAD.txt")
+      fmt.Println("Payload Generated!")
+      fmt.Println("")
       }
 
       file, _ := os.Open(*tenfile)
@@ -48,18 +52,25 @@ func main() {
          list = append(list, scanner.Text())
       }
 
-      filee, _ := os.Create("output.txt")
+      filee, _ := os.Create("PAYLOAD.txt")
       
-      first := fmt.Sprintf("DELAY 2000\n ESC")
+      first := fmt.Sprintf("DELAY 2000\nESC\n")
       filee.WriteString(first + "\n")
 
       for i, line := range list {
          if i<6 {
-            content := fmt.Sprintf("DELAY 500\n STRING %s\n ENTER\n DELAY 500\n ENTER\n DELAY 300", line)
+            content := fmt.Sprintf("DELAY 500\nSTRING %s\nENTER\nDELAY 500\nENTER\nDELAY 500\n", line)
             filee.WriteString(content + "\n")
          }
       }
-      
+
+      for i, line := range list {
+         if i>=6 {
+            content := fmt.Sprintf("DELAY 35000\nDELAY 500\nENTER\nDELAY 500\nESC\nDELAY 500\nSTRING %s\nDELAY 500\nENTER\n", line)
+            filee.WriteString(content + "\n")
+         }
+      }
+
    default:
       fmt.Println("Expected 'w7' and 'w10' subcommand")
       os.Exit(1)
