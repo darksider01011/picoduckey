@@ -41,22 +41,29 @@ func main() {
       fmt.Println("")
       }
 
+      //open file
       file, _ := os.Open(*tenfile)
       defer file.Close()
 
+      //new scaner
       scanner := bufio.NewScanner(file)
 
+      //define empty slice array
       var list []string
 
+      //read from file and apend to slice array
       for scanner.Scan() {
          list = append(list, scanner.Text())
       }
 
+      //create payload file
       filee, _ := os.Create("PAYLOAD.txt")
-      
+
+      //write first line to payload file
       first := fmt.Sprintf("DELAY 2000\nESC\n")
       filee.WriteString(first + "\n")
 
+      //read line 1 to 6 and write to payload
       for i, line := range list {
          if i<6 {
             content := fmt.Sprintf("DELAY 500\nSTRING %s\nENTER\nDELAY 500\nENTER\nDELAY 500\n", line)
@@ -64,6 +71,7 @@ func main() {
          }
       }
 
+      //read line 6 to n and write to payload
       for i, line := range list {
          if i>=6 {
             content := fmt.Sprintf("DELAY 35000\nDELAY 500\nENTER\nDELAY 500\nESC\nDELAY 500\nSTRING %s\nDELAY 500\nENTER\n", line)
