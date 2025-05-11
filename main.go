@@ -8,17 +8,20 @@ import (
 )
 
 func main() {
+   //define w7 subcommand
    seven := flag.NewFlagSet("w7", flag.ExitOnError)
    sevenfile := seven.String("w", "", "Set Wordlist")
-   
+
+   //define w10 subcommand
    ten := flag.NewFlagSet("w10", flag.ExitOnError)
    tenfile := ten.String("w", "", "Set Wordlist")
-   
+
+   //check subcommand is exist or not
    if len(os.Args) < 2 {
       fmt.Println("Expected 'w7' and 'w10' subcommand")
       os.Exit(1)
    }
-   
+
    switch os.Args[1] {
    
    case "w7":
